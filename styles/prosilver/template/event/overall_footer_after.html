@@ -1,0 +1,70 @@
+<!-- IF S_VIEWTOPIC or S_IN_UCP or S_IN_POSTING -->
+<script type="text/javascript" src="{BOARD_URL}ext/bb3mobi/highslide/highslide-full.min.js"></script>
+<script type="text/javascript">
+hs.graphicsDir = '{BOARD_URL}ext/bb3mobi/highslide/graphics/';
+hs.align = 'center';
+hs.transitions = ['expand', 'crossfade'];
+hs.fadeInOut = true;
+hs.dimmingOpacity = 0.8;
+hs.outlineType = 'rounded-white';
+hs.captionEval = 'this.thumb.title';
+// This value needs to be set to false, to solve the issue with the highly increasing view counts.
+hs.continuePreloading = false;
+// Add the slideshow providing the controlbar and the thumbstrip
+hs.addSlideshow({
+	interval: 5000,
+	repeat: false,
+	useControls: true,
+	fixedControls: 'fit',
+	overlayOptions: {
+		opacity: .75,
+		position: 'top center',
+		hideOnMouseOut: true
+	}
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+/* Add highslide in phpBB3.1 && Anvar bb3.mobi */
+	var scr_w = $(this).width();
+	var scr_h = $(this).height();
+	if (scr_w > 800 && scr_h > 600) {
+		$("dl.thumbnail a").addClass("highslide").attr("onclick", "return hs.expand(this)");
+		// BBCode [img]highslide[/img]
+		$('.postimage').not('a .postimage').load(function() {
+			$(this).removeAttr("width")
+			$(this).removeAttr("height")
+			$(this).css({ width: "", height: "" });
+			var h = $(this).height();
+			var w = $(this).width();
+			var size = 420; // Img tag max width
+			if (w > 200) { // Highslide > min width
+				$images = $(this).attr("src");
+				$(this).wrap('<a class="highslide" href="'+$images+'" onclick="return hs.expand(this)"></a>');
+			}
+			if (w > size || h > size) {
+				if (w > h) {
+					h = h*(size/w);
+					w = size;
+				} else {
+					w = w*(size/h);
+					h = size;
+				}
+				$(this).width(w);
+				$(this).height(h);
+			}
+		});
+		$('.postimage').not('a .postimage').each(function() {
+			var src = $(this).attr('src');
+			$(this).attr('src', '');
+			$(this).attr('src', src);
+		});
+		// External Links Fix
+		$('a.img-link').each(function() {
+			$(this).attr("onclick", "return hs.expand(this)");
+			this.href = this.href.replace('{BOARD_URL}url.php?', '');
+		});
+	}
+});
+</script>
+<!-- ENDIF -->
