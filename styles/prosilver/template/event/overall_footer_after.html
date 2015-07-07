@@ -25,45 +25,10 @@ hs.addSlideshow({
 </script>
 <script type="text/javascript">
 $(document).ready(function() {
-/* Add highslide in phpBB3.1 && Anvar bb3.mobi */
 	var scr_w = $(this).width();
 	var scr_h = $(this).height();
 	if (scr_w > 800 && scr_h > 600) {
 		$("dl.thumbnail a").addClass("highslide").attr("onclick", "return hs.expand(this)");
-		// BBCode [img]highslide[/img]
-		$('.postimage').not('a .postimage').load(function() {
-			$(this).removeAttr("width")
-			$(this).removeAttr("height")
-			$(this).css({ width: "", height: "" });
-			var h = $(this).height();
-			var w = $(this).width();
-			var size = 420; // Img tag max width
-			if (w > 200) { // Highslide > min width
-				$images = $(this).attr("src");
-				$(this).wrap('<a class="highslide" href="'+$images+'" onclick="return hs.expand(this)"></a>');
-			}
-			if (w > size || h > size) {
-				if (w > h) {
-					h = h*(size/w);
-					w = size;
-				} else {
-					w = w*(size/h);
-					h = size;
-				}
-				$(this).width(w);
-				$(this).height(h);
-			}
-		});
-		$('.postimage').not('a .postimage').each(function() {
-			var src = $(this).attr('src');
-			$(this).attr('src', '');
-			$(this).attr('src', src);
-		});
-		// External Links Fix
-		$('a.img-link').each(function() {
-			$(this).attr("onclick", "return hs.expand(this)");
-			this.href = this.href.replace('{BOARD_URL}url.php?', '');
-		});
 	}
 });
 </script>
