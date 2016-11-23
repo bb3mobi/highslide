@@ -1,0 +1,99 @@
+<!-- IF  S_VIEWTOPIC or S_IN_UCP or S_IN_POSTING or S_RECENT_TOPICS -->
+<script type="text/javascript" src="{BOARD_URL}ext/bb3mobi/highslide/highslide-full.min.js"></script>
+<script type="text/javascript">
+hs.graphicsDir = '{BOARD_URL}ext/bb3mobi/highslide/graphics/';
+hs.align = 'center';
+hs.transitions = ['expand', 'crossfade'];
+hs.fadeInOut = true;
+hs.dimmingOpacity = 0.8;
+hs.outlineType = 'rounded-white';
+hs.captionEval = 'this.thumb.title';
+// This value needs to be set to false, to solve the issue with the highly increasing view counts.
+hs.continuePreloading = false;
+// Add the slideshow providing the controlbar and the thumbstrip
+hs.addSlideshow({
+	interval: 5000,
+	repeat: false,
+	useControls: true,
+	fixedControls: 'fit',
+	overlayOptions: {
+		opacity: .75,
+		position: 'top center',
+		hideOnMouseOut: true
+	}
+});
+</script>
+<script type="text/javascript">
+function add_highslide(e, elements) {
+/* полная рк версия подхвата highslide с уменьшением */
+	var scr_w = $(document).width();
+	var scr_h = $(document).height();
+	if (scr_w > 800 && scr_h > 600) {
+		;(function ($) {
+			$.fn.bindImageLoad = function (callback) {
+				function isImageLoaded(img) {
+					// Во время события load IE и другие браузеры правильно
+					// определяют состояние картинки через атрибут complete.
+					// Исключение составляют Gecko-based браузеры.
+					if (!img.complete) {
+						return false;
+					}
+					// Тем не менее, у них есть два очень полезных свойства: naturalWidth и naturalHeight.
+					// Они дают истинный размер изображения. Если какртинка еще не загрузилась,
+					// то они должны быть равны нулю.
+					if (typeof img.naturalWidth !== "undefined" && img.naturalWidth === 0) {
+						return false;
+					}
+					// Картинка загружена.
+					return true;
+				}
+				return this.each(function () {
+					var ele = $(this);
+					if (ele.is("img") && $.isFunction(callback)) {
+						ele.one("load", callback);
+						if (isImageLoaded(this)) {
+							ele.trigger("load");
+						}
+					}
+				});
+			};
+		})(jQuery);
+		elements.find("dl.thumbnail a").addClass("highslide").attr("onclick", "return hs.expand(this)");
+		// BBCode [img]highslide[/img]     
+		elements.find('.postimage').not('a.highslide .postimage').bindImageLoad(function () {
+			$(this).removeAttr("width")
+			$(this).removeAttr("height")
+			$(this).css({ width: "", height: "" });
+			var h = $(this).height();
+			var w = $(this).width();
+			var size = 420; // Img tag max width
+			if (h > 200) { // Highslide > min height
+				var i = $(this).attr("src");
+				$(this).wrap('<a class="highslide" href="' +i+ '" onclick="return hs.expand(this)"></a>');
+			}
+			if (w > size || h > size) {
+				if (w > h) {
+					h = h*(size/w);
+					w = size;
+				} else {
+					w = w*(size/h);
+					h = size;
+				}
+				$(this).width(w);
+				$(this).height(h);
+			}
+		});
+	} else {
+		elements.find("dl.thumbnail a").attr("target", "_blank");
+	}
+}
+$(document).ready(function (e) {
+	add_highslide(e, $(document));
+});
+$('#qr_posts').on('qr_completed', add_highslide);
+$('#qr_postform').on('ajax_submit_preview', function (e) {
+	add_highslide(e, $('#preview'));
+});
+$('#recent_topics').on('recent_topics_success', add_highslide);
+</script>
+<!-- ENDIF -->
