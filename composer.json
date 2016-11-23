@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "phpBB 3.1 Extension Highslide",
     "homepage": "http://bb3.mobi",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "time": "2014-12-01",
     "license": "GPL-2.0",
     "authors": [
